@@ -1,0 +1,172 @@
+.bt-wall {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: linear-gradient(180deg, #1a120a 0%, #0a0805 100%);
+  display: flex;
+  flex-direction: column;
+  animation: bt-wall-in 220ms ease;
+
+  &__bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 6px;
+  }
+  &__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 20px;
+    color: rgba(245, 234, 208, 0.95);
+    letter-spacing: 0.02em;
+  }
+  &__close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.04);
+    color: #f3eccf;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  &__stats {
+    flex: 0 0 auto;
+    padding: 6px 16px 18px;
+  }
+  &__milestone {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    text-align: center;
+    padding: 10px 14px;
+    color: #ffd58a;
+    border: 1px solid rgba(255, 215, 140, 0.4);
+    background: rgba(255, 215, 140, 0.08);
+    border-radius: 6px;
+    box-shadow: 0 0 24px rgba(255, 200, 130, 0.15);
+  }
+  &__progress {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  &__progress-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: rgba(245, 234, 208, 0.55);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  &__progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 220, 160, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  &__progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #c98e3a, #ffd58a);
+    box-shadow: 0 0 8px rgba(255, 200, 130, 0.45);
+    transition: width 280ms ease;
+  }
+
+  &__scroll {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0 16px 36px;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
+
+  &__empty {
+    color: rgba(245, 234, 208, 0.5);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    text-align: center;
+    padding: 60px 24px;
+    line-height: 1.4;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 4px;
+    border-bottom: 1px solid rgba(255, 220, 160, 0.06);
+    min-width: 0;
+
+    &.is-self { background: linear-gradient(90deg, rgba(255, 215, 140, 0.05), transparent 70%); }
+  }
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 215, 140, 0.6);
+    box-shadow: 0 0 6px rgba(255, 200, 130, 0.5);
+    flex-shrink: 0;
+  }
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: rgba(245, 234, 208, 0.85);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    overflow: hidden;
+    min-width: 0;
+    cursor: pointer;
+    flex: 1 1 auto;
+
+    &--you {
+      color: #ffd58a;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 11px;
+      cursor: default;
+    }
+  }
+  &__avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #3a2812;
+    flex-shrink: 0;
+    color: #f5e8c8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    &--letter {
+      background: #503416;
+    }
+  }
+  &__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  &__time {
+    color: rgba(245, 234, 208, 0.45);
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    flex-shrink: 0;
+  }
+}
+
+@keyframes bt-wall-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
