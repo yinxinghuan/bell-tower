@@ -75,12 +75,20 @@ export default function BellTower() {
   const ropeRefs = useRef({
     pullVar: (v: number) => sceneRef.current?.setPull(v),
     bellVar: (rad: number) => sceneRef.current?.setBellRad(rad),
+    clapVar: (rad: number) => sceneRef.current?.setClapRad(rad),
   });
+
+  // Each visible clapper strike → ripple shockwave + soft haptic.
+  const onClapperStrike = useCallback(() => {
+    sceneRef.current?.triggerRipple();
+    hapticTap(6);
+  }, []);
 
   const rope = useRopePhysics({
     enabled: !tolls.hasRungToday,
     onRing,
     onFirstTouch,
+    onClapperStrike,
     refs: ropeRefs.current,
   });
   const ropeRef = useRef(rope);
