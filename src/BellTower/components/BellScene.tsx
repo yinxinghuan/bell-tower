@@ -183,6 +183,28 @@ const BellScene = forwardRef<BellSceneHandle, BellSceneProps>(function BellScene
                 <stop offset="0.5" stopColor="#3a2f24" />
                 <stop offset="1" stopColor="#0e0a06" />
               </linearGradient>
+
+              {/* Clip path matching the bell body silhouette. All internal
+                  shading (highlight / shadow / bounce light) is clipped to
+                  this so the soft blurs can't spill out past the bell
+                  edge into empty space. */}
+              <clipPath id="bell-body-clip">
+                <path
+                  d="
+                    M130 50
+                    Q 70 60, 50 130
+                    Q 38 200, 50 250
+                    L 38 260
+                    L 38 282
+                    L 222 282
+                    L 222 260
+                    L 210 250
+                    Q 222 200, 210 130
+                    Q 190 60, 130 50
+                    Z
+                  "
+                />
+              </clipPath>
             </defs>
 
             {/* Crown loops (canons) — two iron loops at top through which the yoke pin passes */}
@@ -223,54 +245,50 @@ const BellScene = forwardRef<BellSceneHandle, BellSceneProps>(function BellScene
               opacity="0.85"
             />
 
-            {/* Shadow — broad soft falloff on the upper-left half, away from
-                the candle. Drawn BEFORE the highlight so the highlight
-                layers on top. Blurred so it reads as occlusion, not paint. */}
-            <ellipse cx="78" cy="155" rx="60" ry="118" fill="url(#bell-shadow)" filter="url(#bell-soft)" />
+            {/* All inner shading is clipped to the bell silhouette so blurs
+                don't bleed past the bell edge. */}
+            <g clipPath="url(#bell-body-clip)">
+              {/* Shadow — broad soft falloff on the upper-left half. */}
+              <ellipse cx="78" cy="155" rx="60" ry="118" fill="url(#bell-shadow)" filter="url(#bell-soft)" />
 
-            {/* Primary highlight — diffuse warm reflection on the lower-right
-                shoulder/waist. A tall ellipse positioned where the convex
-                surface bulges toward the candle. Heavily blurred so it
-                reads as polished bronze, not painted highlight. */}
-            <ellipse
-              cx="183"
-              cy="200"
-              rx="26"
-              ry="72"
-              fill="url(#bell-highlight)"
-              filter="url(#bell-soft-strong)"
-              opacity="0.95"
-            />
-            {/* Secondary brighter core — narrower, tighter ellipse stacked
-                inside the primary highlight for a believable "wet metal"
-                hot spot near the equator. */}
-            <ellipse
-              cx="187"
-              cy="205"
-              rx="10"
-              ry="36"
-              fill="#fff3d0"
-              filter="url(#bell-soft)"
-              opacity="0.55"
-            />
+              {/* Primary highlight — diffuse warm reflection on the right side. */}
+              <ellipse
+                cx="183"
+                cy="200"
+                rx="26"
+                ry="72"
+                fill="url(#bell-highlight)"
+                filter="url(#bell-soft-strong)"
+                opacity="0.95"
+              />
+              {/* Secondary brighter core near the equator. */}
+              <ellipse
+                cx="187"
+                cy="205"
+                rx="10"
+                ry="36"
+                fill="#fff3d0"
+                filter="url(#bell-soft)"
+                opacity="0.55"
+              />
 
-            {/* Sharp rim specular on the sound-bow lip where the metal edge
-                catches a tight glint of the candle flame. NOT blurred — the
-                rim itself is sharp so its reflection is too. */}
+              {/* Bounce light on the LEFT silhouette so shadow side keeps color. */}
+              <ellipse
+                cx="52"
+                cy="200"
+                rx="10"
+                ry="56"
+                fill="#9a6c1c"
+                filter="url(#bell-soft)"
+                opacity="0.35"
+              />
+            </g>
+
+            {/* Sharp rim specular on the sound-bow lip — drawn AFTER the
+                clip group so the bright spot sits exactly at the lip
+                boundary. */}
             <ellipse cx="198" cy="266" rx="14" ry="3" fill="#fff5d8" opacity="0.8" />
             <ellipse cx="200" cy="266" rx="6" ry="2" fill="#ffffff" opacity="0.95" />
-
-            {/* Bounce light on the LEFT silhouette — implies warm reflection
-                from the stone floor so the shadow side keeps some color. */}
-            <ellipse
-              cx="52"
-              cy="200"
-              rx="10"
-              ry="56"
-              fill="#9a6c1c"
-              filter="url(#bell-soft)"
-              opacity="0.35"
-            />
 
             {/* Lip rim — thin highlight along the bottom curve */}
             <path
