@@ -209,10 +209,13 @@
 // occluded by the bell body, giving the read that the rope emerges from
 // inside the bell. Below the bell mouth, the rope is the only thing in
 // that column so it shows fully.
+//
+// `bottom: 20%` leaves headroom below the resting handle so the user can
+// pull the handle DOWN ~70px without it leaving the visible scene.
 .bt-rope-wrap {
   position: absolute;
   top: calc(12% + 30px);
-  bottom: 6%;
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 3;
@@ -222,8 +225,10 @@
 .bt-rope {
   position: relative;
   width: 18px;
-  // Rope visibly extends with the pull (up to +90px)
-  height: calc(100% + calc(var(--pull) * 90px));
+  // Rope visibly extends with the pull. Cap at +70px so the handle stays
+  // comfortably inside the scene at full pull (with the rope-wrap's
+  // 20% bottom inset there's room to spare).
+  height: calc(100% + calc(var(--pull) * 70px));
   transition: height 60ms linear;
 
   // Braided rope: dense diagonal twist via stacked repeating gradients.
@@ -270,7 +275,9 @@
 
   &__handle {
     position: absolute;
-    bottom: -58px;
+    // Anchor handle just below the rope's tip so it sits at the rope end,
+    // not dangling far below it (which used to push it off-screen).
+    bottom: -26px;
     left: 50%;
     transform: translateX(-50%);
     width: 110px;

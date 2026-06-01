@@ -134,26 +134,46 @@ const BellScene = forwardRef<BellSceneHandle, BellSceneProps>(function BellScene
 
           <svg viewBox="0 0 260 320" width="220" height="270" aria-hidden="true">
             <defs>
-              <linearGradient id="bell-shoulder" x1="0.2" y1="0" x2="0.8" y2="1">
-                <stop offset="0"    stopColor="#f0d29a" />
-                <stop offset="0.18" stopColor="#caa05a" />
-                <stop offset="0.55" stopColor="#7a5618" />
-                <stop offset="1"    stopColor="#241808" />
+              {/* Body gradient — slightly darker on the upper-left (shadow
+                  side) and warmer on the lower-right (lit by candle). Stays
+                  in bronze range across the whole bell — real metal still
+                  has color in shadow; only the explicit shadow paint goes
+                  near-black. */}
+              <linearGradient id="bell-shoulder" x1="0.1" y1="0.1" x2="0.9" y2="0.95">
+                <stop offset="0"    stopColor="#3a2a10" />
+                <stop offset="0.45" stopColor="#7a5618" />
+                <stop offset="0.85" stopColor="#caa05a" />
+                <stop offset="1"    stopColor="#e8c478" />
               </linearGradient>
               <linearGradient id="bell-soundbow" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stopColor="#7a5618" />
                 <stop offset="0.4" stopColor="#a07c2f" />
                 <stop offset="1" stopColor="#352208" />
               </linearGradient>
-              <radialGradient id="bell-highlight" cx="0.35" cy="0.25" r="0.5">
-                <stop offset="0" stopColor="#fff3c8" stopOpacity="0.9" />
-                <stop offset="0.4" stopColor="#fff3c8" stopOpacity="0.32" />
-                <stop offset="1" stopColor="#fff3c8" stopOpacity="0" />
+              {/* Specular reflection — bright cream center, soft warm falloff.
+                  Centered (cx 0.5 cy 0.5) so the bright spot lives in the
+                  middle of the highlight band's bounding box. */}
+              <radialGradient id="bell-highlight" cx="0.5" cy="0.5" r="0.55">
+                <stop offset="0"    stopColor="#fff6d8" stopOpacity="0.85" />
+                <stop offset="0.35" stopColor="#ffe6a8" stopOpacity="0.45" />
+                <stop offset="0.75" stopColor="#ffd070" stopOpacity="0.15" />
+                <stop offset="1"    stopColor="#ffd070" stopOpacity="0" />
               </radialGradient>
-              <radialGradient id="bell-shadow" cx="0.78" cy="0.65" r="0.55">
-                <stop offset="0" stopColor="#1a0e02" stopOpacity="0.0" />
-                <stop offset="1" stopColor="#1a0e02" stopOpacity="0.55" />
+              {/* Shadow falloff — transparent on the bell-equator side
+                  (right-bottom of the shadow ellipse) and opaque on the
+                  silhouette side (upper-left). */}
+              <radialGradient id="bell-shadow" cx="0.85" cy="0.75" r="0.7">
+                <stop offset="0" stopColor="#1a0e02" stopOpacity="0" />
+                <stop offset="1" stopColor="#1a0e02" stopOpacity="0.65" />
               </radialGradient>
+              {/* Blur for soft-edge highlights so they read as reflections
+                  rather than painted-on shapes. */}
+              <filter id="bell-soft" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="4" />
+              </filter>
+              <filter id="bell-soft-strong" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="9" />
+              </filter>
               <linearGradient id="bell-mouth" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stopColor="#050200" />
                 <stop offset="1" stopColor="#1a0c02" />
@@ -203,12 +223,54 @@ const BellScene = forwardRef<BellSceneHandle, BellSceneProps>(function BellScene
               opacity="0.85"
             />
 
-            {/* Highlight — soft warm gleam on the upper-left where light hits */}
-            <ellipse cx="92" cy="125" rx="28" ry="78" fill="url(#bell-highlight)" opacity="0.55" />
-            <ellipse cx="80" cy="180" rx="7" ry="30" fill="rgba(255,240,200,0.10)" />
+            {/* Shadow — broad soft falloff on the upper-left half, away from
+                the candle. Drawn BEFORE the highlight so the highlight
+                layers on top. Blurred so it reads as occlusion, not paint. */}
+            <ellipse cx="78" cy="155" rx="60" ry="118" fill="url(#bell-shadow)" filter="url(#bell-soft)" />
 
-            {/* Shadow side — opposite the light, in the lower-right */}
-            <ellipse cx="186" cy="180" rx="55" ry="95" fill="url(#bell-shadow)" />
+            {/* Primary highlight — diffuse warm reflection on the lower-right
+                shoulder/waist. A tall ellipse positioned where the convex
+                surface bulges toward the candle. Heavily blurred so it
+                reads as polished bronze, not painted highlight. */}
+            <ellipse
+              cx="183"
+              cy="200"
+              rx="26"
+              ry="72"
+              fill="url(#bell-highlight)"
+              filter="url(#bell-soft-strong)"
+              opacity="0.95"
+            />
+            {/* Secondary brighter core — narrower, tighter ellipse stacked
+                inside the primary highlight for a believable "wet metal"
+                hot spot near the equator. */}
+            <ellipse
+              cx="187"
+              cy="205"
+              rx="10"
+              ry="36"
+              fill="#fff3d0"
+              filter="url(#bell-soft)"
+              opacity="0.55"
+            />
+
+            {/* Sharp rim specular on the sound-bow lip where the metal edge
+                catches a tight glint of the candle flame. NOT blurred — the
+                rim itself is sharp so its reflection is too. */}
+            <ellipse cx="198" cy="266" rx="14" ry="3" fill="#fff5d8" opacity="0.8" />
+            <ellipse cx="200" cy="266" rx="6" ry="2" fill="#ffffff" opacity="0.95" />
+
+            {/* Bounce light on the LEFT silhouette — implies warm reflection
+                from the stone floor so the shadow side keeps some color. */}
+            <ellipse
+              cx="52"
+              cy="200"
+              rx="10"
+              ry="56"
+              fill="#9a6c1c"
+              filter="url(#bell-soft)"
+              opacity="0.35"
+            />
 
             {/* Lip rim — thin highlight along the bottom curve */}
             <path
@@ -225,18 +287,21 @@ const BellScene = forwardRef<BellSceneHandle, BellSceneProps>(function BellScene
             <ellipse cx="130" cy="293" rx="86" ry="11" fill="url(#bell-mouth)" />
             <ellipse cx="130" cy="289" rx="86" ry="4" fill="#000" opacity="0.6" />
 
-            {/* Clapper — own group, rotates independently around its top pivot.
-                The clapper hangs from the inside top of the bell. */}
+            {/* Clapper — own group, rotates independently around the
+                top-interior pivot. We only render the BALL (no shaft) since
+                a real bell's metal occludes the shaft; you only see the
+                clapper peeking through the mouth at the bottom. The pivot
+                stays at (130,60) so the rotation arc matches a full-length
+                clapper, but the visible mass lives at the mouth. */}
             <g
               ref={clapperRef}
               className="bt-bell__clapper"
               style={{ transformOrigin: '130px 60px' } as React.CSSProperties}
             >
-              {/* Shaft */}
-              <rect x="127" y="60" width="6" height="170" rx="2" fill="#1a0e04" />
-              {/* Ball at the bottom */}
-              <ellipse cx="130" cy="244" rx="14" ry="16" fill="#3a2614" stroke="#0a0502" strokeWidth="1.2" />
-              <ellipse cx="125" cy="238" rx="4" ry="5" fill="rgba(255,210,140,0.4)" />
+              {/* Ball at mouth level — sits just inside the lip so swinging
+                  reveals it on alternating sides. */}
+              <ellipse cx="130" cy="270" rx="13" ry="14" fill="#1a0e04" stroke="#000" strokeWidth="1" />
+              <ellipse cx="126" cy="265" rx="4" ry="4" fill="rgba(255,210,140,0.35)" />
             </g>
 
             {/* Cast-shadow ellipse beneath the bell rim — implies the bell is 3D */}
