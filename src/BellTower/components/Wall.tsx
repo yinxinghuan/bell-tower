@@ -3,7 +3,7 @@
 import './Wall.less';
 import type { Toll, WallToll } from '../types';
 import { t, relativeTime } from '../i18n';
-import { isInAigram, openAigramProfile } from '@shared/runtime';
+import { isInAigramNow, openAigramProfile } from '@shared/runtime';
 
 export type WallProps = {
   open: boolean;
@@ -62,7 +62,7 @@ export default function Wall({ open, onClose, entries, myToday, milestoneHit, pl
                   <span
                     className="bt-wall__chip"
                     role="button"
-                    onClick={() => isInAigram && openAigramProfile(r.userId)}
+                    onClick={() => isInAigramNow() && openAigramProfile(r.userId)}
                   >
                     {r.userAvatarUrl ? (
                       <img className="bt-wall__avatar" src={r.userAvatarUrl} alt="" draggable={false} />

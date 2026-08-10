@@ -9,8 +9,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   callAigramAPI,
-  isInAigram,
-  telegramId,
+  isInAigramNow,
+  getTelegramId,
   type AigramResponse,
 } from '@shared/runtime';
 import { getGameUuid, useGameEvent, useGameStats } from '@shared/runtime';
@@ -69,7 +69,7 @@ export function useTolls(): UseTolls {
 
   const refresh = useCallback(async () => {
     const sessionId = getGameUuid();
-    if (!isInAigram || !sessionId) {
+    if (!isInAigramNow() || !sessionId) {
       setTodayEntries([]);
       return;
     }
@@ -82,7 +82,7 @@ export function useTolls(): UseTolls {
       const flat: WallToll[] = [];
       for (const r of rows) {
         if (!r.resource_data) continue;
-        if (r.user_id === telegramId) continue;       // self renders from local
+        if (r.user_id === getTelegramId()!) continue;       // self renders from local
         let payload: SavePayload;
         try { payload = JSON.parse(r.resource_data) as SavePayload; }
         catch (_) { continue; }
@@ -114,7 +114,7 @@ export function useTolls(): UseTolls {
   const submitRing = useCallback(() => {
     if (myToday) return;
     const ring: Toll = {
-      id: `${telegramId ?? 'anon'}-${today}`,
+      id: `${getTelegramId()! ?? 'anon'}-${today}`,
       ts: Date.now(),
       day: today,
     };

@@ -4,7 +4,7 @@
 import './Ticker.less';
 import type { WallToll } from '../types';
 import { relativeTime, t } from '../i18n';
-import { isInAigram, openAigramProfile } from '@shared/runtime';
+import { isInAigramNow, openAigramProfile } from '@shared/runtime';
 
 export type TickerProps = {
   entries: WallToll[];
@@ -25,7 +25,7 @@ export default function Ticker({ entries, onOpenWall }: TickerProps) {
               role="button"
               onClick={(ev) => {
                 ev.stopPropagation();
-                if (isInAigram) openAigramProfile(e.userId);
+                if (isInAigramNow()) openAigramProfile(e.userId);
               }}
             >
               {e.userAvatarUrl ? (
