@@ -51,7 +51,7 @@ const STR: Record<Locale, Record<string, string>> = {
 
 function detectLocale(): Locale {
   try {
-    const o = localStorage.getItem('bell_tower_locale');
+    const o = alteruLocalStorage.getItem('bell_tower_locale');
     if (o === 'en' || o === 'zh') return o;
   } catch (_) {}
   return navigator.language.toLowerCase().startsWith('zh') ? 'zh' : 'en';
